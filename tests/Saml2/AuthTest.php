@@ -32,7 +32,7 @@ class AuthTest extends TestCase
 
         $auth->shouldReceive('isAuthenticated')->andReturn('return');
 
-        $this->assertEquals('return', $saml2->isAuthenticated());
+        $this->assertTrue($saml2->isAuthenticated());
     }
 
     public function testLogin()

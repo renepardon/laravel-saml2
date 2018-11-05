@@ -169,7 +169,7 @@ class Saml2Auth
 
         $auth->processSLO($keep_local_session, null, $retrieveParametersFromServer, $session_callback);
 
-        $errors = $auth->getErrors();
+        $errors = (array)$auth->getErrors();
 
         return $errors;
     }
