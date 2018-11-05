@@ -1,6 +1,11 @@
 ## Laravel 5 - Saml2
 
 [![Build Status](https://api.travis-ci.org/renepardon/laravel-saml2.svg)](https://travis-ci.org/renepardon/laravel-saml2)
+[![Latest Stable Version](https://poser.pugx.org/renepardon/laravel-saml2/v/stable)](https://packagist.org/packages/renepardon/laravel-saml2)
+[![Total Downloads](https://poser.pugx.org/renepardon/laravel-saml2/downloads)](https://packagist.org/packages/renepardon/laravel-saml2)
+[![Latest Unstable Version](https://poser.pugx.org/renepardon/laravel-saml2/v/unstable)](https://packagist.org/packages/renepardon/laravel-saml2)
+[![License](https://poser.pugx.org/renepardon/laravel-saml2/license)](https://packagist.org/packages/renepardon/laravel-saml2)
+[![composer.lock](https://poser.pugx.org/renepardon/laravel-saml2/composerlock)](https://packagist.org/packages/renepardon/laravel-saml2)
 
 A Laravel package for Saml2 integration as a SP (service provider) based on [OneLogin v3](https://github.com/onelogin/php-saml) toolkit, which is much lighter and easier to install than simplesamlphp SP. It doesn't need separate routes or session storage to work!
 
