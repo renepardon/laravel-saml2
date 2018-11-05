@@ -2,19 +2,28 @@
 
 namespace Aacotroneo\Saml2;
 
-use OneLogin\Saml2\Auth as OneLogin_Saml2_Auth;
+use Illuminate\Contracts\Routing\UrlGenerator;
+use OneLogin\Saml2\Auth;
 
 /**
  * A simple class that represents the user that 'came' inside the saml2 assertion
  * Class Saml2User
+ *
  * @package Aacotroneo\Saml2
  */
 class Saml2User
 {
-
+    /**
+     * @var Auth
+     */
     protected $auth;
 
-    function __construct(OneLogin_Saml2_Auth $auth)
+    /**
+     * Saml2User constructor.
+     *
+     * @param Auth $auth
+     */
+    public function __construct(Auth $auth)
     {
         $this->auth = $auth;
     }
@@ -22,18 +31,17 @@ class Saml2User
     /**
      * @return string User Id retrieved from assertion processed this request
      */
-    function getUserId()
+    public function getUserId(): string
     {
         $auth = $this->auth;
 
         return $auth->getNameId();
-
     }
 
     /**
      * @return array attributes retrieved from assertion processed this request
      */
-    function getAttributes()
+    public function getAttributes(): array
     {
         $auth = $this->auth;
 
@@ -41,34 +49,35 @@ class Saml2User
     }
 
     /**
-     * Returns the requested SAML attribute
-     *
-     * @param string $name The requested attribute of the user.
-     * @return array|null Requested SAML attribute ($name).
-     */
-    function getAttribute($name) {
-        $auth = $this->auth;
-
-        return $auth->getAttribute($name);
-    }
-
-    /**
      * @return string the saml assertion processed this request
      */
-    function getRawSamlAssertion()
+    public function getRawSamlAssertion(): string
     {
         return app('request')->input('SAMLResponse'); //just this request
     }
 
-    function getIntendedUrl()
+    /**
+     * @return mixed
+     */
+    public function getIntendedUrl()
     {
         $relayState = app('request')->input('RelayState'); //just this request
-
-        $url = app('Illuminate\Contracts\Routing\UrlGenerator');
+        $url = app(UrlGenerator::class);
 
         if ($relayState && $url->full() != $relayState) {
-
             return $relayState;
+        }
+    }
+
+    /**
+     * Parse the saml attributes and adds it to this user
+     *
+     * @param array $attributes Array of properties which need to be parsed, like this ['email' => 'urn:oid:0.9.2342.19200300.100.1.3']
+     */
+    public function parseAttributes(array $attributes = [])
+    {
+        foreach ($attributes as $propertyName => $samlAttribute) {
+            $this->parseUserAttribute($samlAttribute, $propertyName);
         }
     }
 
@@ -77,13 +86,16 @@ class Saml2User
      *
      * @param string $samlAttribute
      * @param string $propertyName
+     *
      * @return array|null
      */
-    function parseUserAttribute($samlAttribute = null, $propertyName = null) {
-        if(empty($samlAttribute)) {
+    public function parseUserAttribute(?string $samlAttribute = null, ?string $propertyName = null): ?array
+    {
+        if (empty($samlAttribute)) {
             return null;
         }
-        if(empty($propertyName)) {
+
+        if (empty($propertyName)) {
             return $this->getAttribute($samlAttribute);
         }
 
@@ -91,24 +103,32 @@ class Saml2User
     }
 
     /**
-     * Parse the saml attributes and adds it to this user
+     * Returns the requested SAML attribute
      *
-     * @param array $attributes Array of properties which need to be parsed, like this ['email' => 'urn:oid:0.9.2342.19200300.100.1.3']
+     * @param string $name The requested attribute of the user.
+     *
+     * @return array|null Requested SAML attribute ($name).
      */
-    function parseAttributes($attributes = array()) {
-        foreach($attributes as $propertyName => $samlAttribute) {
-            $this->parseUserAttribute($samlAttribute, $propertyName);
-        }
+    public function getAttribute(string $name): ?array
+    {
+        $auth = $this->auth;
+
+        return $auth->getAttribute($name);
     }
 
-    function getSessionIndex()
+    /**
+     * @return null|string
+     */
+    public function getSessionIndex(): ?string
     {
         return $this->auth->getSessionIndex();
     }
 
-    function getNameId()
+    /**
+     * @return string
+     */
+    public function getNameId(): string
     {
         return $this->auth->getNameId();
     }
-
 }

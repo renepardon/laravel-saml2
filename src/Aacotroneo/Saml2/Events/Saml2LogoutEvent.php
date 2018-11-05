@@ -2,9 +2,12 @@
 
 namespace Aacotroneo\Saml2\Events;
 
-class Saml2LogoutEvent {
-
-
-
+/**
+ * Class Saml2LogoutEvent
+ *
+ * @package Aacotroneo\Saml2\Events
+ */
+class Saml2LogoutEvent
+{
 
 }
